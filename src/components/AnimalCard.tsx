@@ -1,19 +1,13 @@
 // components/AnimalCard.tsx
 import AnimalProCard from "./AnimalProCard";
+// @ts-ignore
+import type { Animal } from "../lib/animals.service";
 
-interface Animal {
-  id: number;
-  scientific_name: string;
-  common_name: string | null;
-  habitat: string | null;
-  diet: string | null;
-  difficulty: number;
-  notes: string | null;
-  image_url: string | null;
-  countries?: string[]; // ← nuevo
-}
+type IucnCode = "EX" | "EW" | "CR" | "EN" | "VU" | "NT" | "LC";
 
 export default function AnimalCard({ animal }: { animal: Animal }) {
+  const status = (animal.iucn_status ?? "LC") as IucnCode;
+
   return (
     <AnimalProCard
       name={animal.common_name || "Desconocido"}
@@ -21,8 +15,11 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
       image={animal.image_url || "/placeholder.png"}
       habitat={animal.habitat || "N/D"}
       diet={animal.diet || "N/D"}
-      status="LC"
+      status={status}
       countries={animal.countries || []}
+      breeding={animal.breeding || undefined}
+      location={animal.notes || undefined}
+      env={animal.env}
     />
   );
 }

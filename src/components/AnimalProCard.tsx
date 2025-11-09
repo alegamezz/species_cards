@@ -1,97 +1,261 @@
+// components/AnimalProCard.tsx
 import React from "react";
 import MapChart from "./MapChart";
+import ConservationBar from "./ConservationBar";
 
-interface AnimalProCardProps {
-    name: string;
-    scientificName: string;
-    image: string;
-    habitat: string;
-    diet: string;
-    status: string;
-    countries?: string[];
-  }
+/* Iconos react-icons */
+import {
+  WiHumidity,
+  WiThermometer,
+  WiMoonWaningCrescent3,
+  WiDaySunny,
+} from "react-icons/wi";
+import { GiSandsOfTime } from "react-icons/gi";
+import { MdOutlineTimelapse } from "react-icons/md";
+import { TbRulerMeasure } from "react-icons/tb";
+import { BsSunsetFill } from "react-icons/bs";
 
-const statusColors: Record<string, string> = {
-  LC: "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/40",
-  "Near Threatened": "bg-lime-500/20 text-lime-300 ring-1 ring-lime-400/40",
-  NT: "bg-lime-500/20 text-lime-300 ring-1 ring-lime-400/40",
-  VU: "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40",
-  EN: "bg-orange-500/20 text-orange-300 ring-1 ring-orange-400/40",
-  CR: "bg-rose-500/20 text-rose-300 ring-1 ring-rose-400/40",
-  default: "bg-slate-500/20 text-slate-300 ring-1 ring-slate-400/40",
+type IucnCode = "EX" | "EW" | "CR" | "EN" | "VU" | "NT" | "LC";
+
+type Env = {
+  temperature_min_c?: number | null;
+  temperature_max_c?: number | null;
+  humidity_min_pct?: number | null;
+  humidity_max_pct?: number | null;
+  lifespan_years_min?: number | null;
+  lifespan_years_max?: number | null;
+  length_adult_cm_min?: number | null;
+  length_adult_cm_max?: number | null;
+  activity?: "diurno" | "nocturno" | "crepuscular" | null;
 };
 
+interface AnimalProCardProps {
+  name: string;
+  scientificName: string;
+  image: string;
+  habitat: string;
+  diet: string;
+  status: IucnCode;
+  countries?: string[];
+  location?: string;
+  breeding?: string;
+  env?: Env;
+}
+
+const titleCls = "text-[13px] md:text-[14px] font-semibold text-white";
+const valueCls = "text-[12px] md:text-[12px] font-semibold text-slate-300";
+
+const IconWrap: React.FC<{ children: React.ReactNode; label?: string }> = ({
+  children,
+  label = "-",
+}) => (
+  <div className="flex flex-col items-center w-12">
+    <div className="text-slate-200">{children}</div>
+    <span className="mt-1 text-[10px] sm:text-[11px] leading-none font-semibold text-slate-400 whitespace-nowrap truncate max-w-[3.25rem]">
+      {label ?? "-"}
+    </span>
+  </div>
+);
+
+/* Helpers de formato */
+const fmtRange = (min?: number | null, max?: number | null, unit = "") => {
+  const hasMin = typeof min === "number";
+  const hasMax = typeof max === "number";
+  if (hasMin && hasMax) return `${min}–${max}${unit}`;
+  if (hasMin) return `${min}${unit}`;
+  if (hasMax) return `${max}${unit}`;
+  return "-";
+};
+
+const fmtTemp = (e?: Env) =>
+  fmtRange(e?.temperature_min_c, e?.temperature_max_c, " ºC");
+const fmtHum = (e?: Env) => fmtRange(e?.humidity_min_pct, e?.humidity_max_pct, " %");
+const fmtLife = (e?: Env) =>
+  fmtRange(e?.lifespan_years_min, e?.lifespan_years_max, " a");
+
+// Longitud: usa m si alguno >= 100 cm
+const fmtLen = (e?: Env) => {
+  const min = e?.length_adult_cm_min ?? null;
+  const max = e?.length_adult_cm_max ?? null;
+  const needsMeters =
+    (typeof min === "number" && min >= 100) ||
+    (typeof max === "number" && max >= 100);
+
+  if (needsMeters) {
+    const toM = (v?: number | null) =>
+      typeof v === "number" ? +(v / 100).toFixed(2) : null;
+    const minM = toM(min);
+    const maxM = toM(max);
+    const hasMin = typeof minM === "number";
+    const hasMax = typeof maxM === "number";
+    if (hasMin && hasMax) return `${minM}–${maxM} m`;
+    if (hasMin) return `${minM} m`;
+    if (hasMax) return `${maxM} m`;
+    return "-";
+  }
+
+  return fmtRange(min, max, " cm");
+};
+
+// Icono por actividad
+const ActivityIcon: React.FC<{ activity: Env["activity"] }> = ({ activity }) => {
+  if (activity === "diurno") return <WiDaySunny className="w-7 h-7" />;
+  if (activity === "nocturno") return <WiMoonWaningCrescent3 className="w-7 h-7" />;
+  if (activity === "crepuscular") return <BsSunsetFill className="w-7 h-7" />;
+  return <MdOutlineTimelapse className="w-7 h-7" />;
+};
 
 const AnimalProCard: React.FC<AnimalProCardProps> = ({
-    name,
-    scientificName,
-    image,
-    habitat,
-    diet,
-    status,
-    countries = [],
-  }) => {
-  const badgeClass = statusColors[status] ?? statusColors.default;
-
+  name,
+  scientificName,
+  image,
+  habitat,
+  diet,
+  status,
+  countries = [],
+  breeding,
+  env,
+}) => {
   return (
     <article
-      className="relative w-full max-w-2xl rounded-2xl border border-white/10 bg-linear-to-br from-slate-900 to-slate-950 text-white shadow-2xl overflow-hidden"
-      aria-label={`${name} (${scientificName})`}
+      className="
+        relative w-[710px] h-[350px] rounded-2xl bg-slate-900/70 shadow-2xl overflow-hidden
+        cursor-pointer
+        motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out
+        motion-safe:hover:scale-[1.015]
+        hover:shadow-[0_24px_60px_rgba(0,0,0,0.45)]
+      "
     >
-      {/* efecto vidrio */}
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10" />
-      <div className="backdrop-blur-sm bg-white/5 absolute inset-0 opacity-[0.02]" />
+      {/* glow especular suave en hover */}
+      <div
+        className="
+          pointer-events-none absolute inset-0 opacity-0
+          motion-safe:transition-opacity motion-safe:duration-300
+          hover:opacity-100
+        "
+        style={{
+          background:
+            "radial-gradient(80% 60% at 30% 0%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%)",
+        }}
+      />
 
-      <div className="flex flex-col p-5">
-        {/* Encabezado con nombre */}
-        <header className="flex items-start justify-between mb-4">
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
+      {/* overlay lateral sutil */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0) 70%)",
+        }}
+      />
+
+      {/* borde */}
+      <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-white/10 z-20" />
+
+      {/* blur global leve */}
+      <div className="backdrop-blur-md bg-white/5 absolute inset-0 opacity-[0.06] z-0" />
+
+      {/* Fondo: mapa */}
+      {countries.length > 0 && (
+        <div
+          className="absolute inset-0 z-0 opacity-30 pointer-events-none"
+          style={{
+            transform: "scale(1.35) translateY(-6%) translateX(6%)",
+            WebkitMaskImage:
+              "radial-gradient(72% 72% at 60% 45%, black 50%, transparent 100%)",
+            maskImage:
+              "radial-gradient(72% 72% at 60% 45%, black 50%, transparent 100%)",
+          }}
+        >
+          <MapChart highlightCountries={countries} variant="background" />
+        </div>
+      )}
+
+      {/* Imagen grande abajo-izquierda */}
+      <div
+        className="absolute bottom-0 left-0 z-60 pointer-events-none pb-2 pl-2"
+        style={{
+          overflow: "visible",
+          WebkitMaskImage:
+            "radial-gradient(85% 85% at 40% 75%, black 70%, transparent 100%)",
+          maskImage:
+            "radial-gradient(85% 85% at 40% 75%, black 70%, transparent 100%)",
+        }}
+      >
+        <img
+          src={image}
+          alt={`Imagen de ${name}`}
+          loading="lazy"
+          width={300}
+          height={225}
+          className="object-contain object-bottom-left md:w-[340px] md:h-[255px]"
+          style={{
+            filter:
+              "drop-shadow(0 12px 24px rgba(0,0,0,0.35)) drop-shadow(0 28px 56px rgba(0,0,0,0.25))",
+            WebkitFilter:
+              "drop-shadow(0 12px 24px rgba(0,0,0,0.35)) drop-shadow(0 28px 56px rgba(0,0,0,0.25))",
+          }}
+        />
+      </div>
+
+      {/* Cabecera: nombre a la izquierda, iconos a la derecha */}
+      <header className="absolute top-5 left-5 right-5 z-30">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h2 className="text-xl md:text-3xl font-semibold tracking-tight text-white truncate">
               {name}
             </h2>
-            <p className="text-sm italic text-slate-400">{scientificName}</p>
-          </div>
-          <span
-            className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${badgeClass}`}
-            aria-label={`Estado de conservación: ${status}`}
-            title={`Estado: ${status}`}
-          >
-            {status}
-          </span>
-        </header>
-
-        {/* Cuerpo con imagen e info */}
-        <div className="flex flex-row items-start gap-5">
-          {/* Imagen a la izquierda, un poco más abajo */}
-          <div className="shrink-0 flex items-center justify-center mt-2 w-1/3">
-            <img
-              src={image}
-              alt={`Imagen de ${name}`}
-              className="object-contain max-h-48 drop-shadow-[0_12px_24px_rgba(0,0,0,0.45)]"
-              loading="lazy"
-              width={256}
-              height={192}
-            />
+            <p className="text-md italic font-semibold text-slate-400 truncate">
+              {scientificName}
+            </p>
           </div>
 
-          {/* Info a la derecha */}
-          <div className="flex-1 flex flex-col justify-between">
-            <section className="grid grid-cols-1 gap-2 text-sm">
-              <p>
-                <span className="text-slate-400">Hábitat:</span> {habitat}
+          <div className="flex flex-row items-center gap-5 shrink-0">
+            <IconWrap label={fmtTemp(env)}>
+              <WiThermometer className="w-7 h-7" />
+            </IconWrap>
+            <IconWrap label={fmtHum(env)}>
+              <WiHumidity className="w-7 h-7" />
+            </IconWrap>
+            <IconWrap label={fmtLife(env)}>
+              <GiSandsOfTime className="w-7 h-7" />
+            </IconWrap>
+            <IconWrap label={env?.activity ?? "-"}>
+              <ActivityIcon activity={env?.activity ?? null} />
+            </IconWrap>
+            <IconWrap label={fmtLen(env)}>
+              <TbRulerMeasure className="w-7 h-7" />
+            </IconWrap>
+          </div>
+        </div>
+      </header>
+
+      {/* Cuerpo en dos columnas */}
+      <div className="relative z-30 h-full pt-[88px] px-0">
+        <div className="grid grid-cols-2 h-full gap-5">
+          <div />
+          <div className="flex flex-col">
+            <section className="grid grid-cols-1 gap-3 pr-5 sm:pr-8">
+              <p className={valueCls}>
+                <span className={titleCls}>HÁBITAT:</span> {habitat}
               </p>
-              <p>
-                <span className="text-slate-400">Dieta:</span> {diet}
+              <p className={valueCls}>
+                <span className={titleCls}>DIETA:</span> {diet}
               </p>
+              {breeding && (
+                <p className={valueCls}>
+                  <span className={titleCls}>REPRODUCCIÓN:</span> {breeding}
+                </p>
+              )}
             </section>
-
-            <footer className="mt-4 flex items-end justify-end">
-                
-            <div className="w-28 h-20 ring-1 ring-white/15 rounded-md overflow-hidden">
-              <MapChart highlightCountries={countries} />
-            </div>
-          </footer>
+            <div className="flex-1" />
           </div>
+        </div>
+      </div>
+
+      {/* Barra de conservación fija abajo-derecha */}
+      <div className="absolute bottom-4 right-4 z-40">
+        <div className="w-[260px] sm:w-[320px]">
+          <ConservationBar status={status} showLabel />
         </div>
       </div>
     </article>
