@@ -107,7 +107,7 @@ export default function Home() {
       {/* Version tag - bottom right corner */}
       <div className="fixed bottom-4 right-4 z-30 pointer-events-none">
         <span className="inline-block rounded-md bg-slate-800/80 px-3 py-1.5 text-xs font-mono text-neutral-300 backdrop-blur-sm border border-slate-700/50 shadow-lg">
-          v.01.00
+          v.01.01
         </span>
       </div>
 
