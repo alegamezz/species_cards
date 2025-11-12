@@ -281,6 +281,15 @@ const AnimalProCard: React.FC<AnimalProCardProps> = ({
               <ConservationBar status={status} showLabel />
             </div>
           </div>
+
+          {/* 🌿 Marca de agua moderna - Terrarium Labels */}
+          <div className="absolute bottom-3 left-4 z-40 pointer-events-none">
+            <div className="flex items-center gap-1.5 px-0.5 py-0 rounded-md bg-black/20 backdrop-blur-sm border border-white/5">
+              <div className="text-emerald-400/80 text-[7px] font-bold tracking-wider uppercase">
+                @TerrariumLabels
+              </div>
+            </div>
+          </div>
         </article>
       </div>
     </div>
