@@ -56,7 +56,6 @@ export default function Species() {
   const [animals, setAnimals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAnimal, setSelectedAnimal] = useState<any | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const title = useMemo(() => {
@@ -201,7 +200,7 @@ export default function Species() {
 
               {/* Indicadores de swipe (solo móvil) */}
               <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-50">
-                {animals.map((a, idx) => (
+                {animals.map((a) => (
                   <div
                     key={a.id}
                     className={`h-1.5 rounded-full transition-all duration-300 ${
