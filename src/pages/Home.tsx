@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { ThreeDMarquee } from "../components/ui/3d-marquee";
 import logo from "../assets/logo-terrarium-text-lime-green.png";
 
+
 export default function Home() {
   const navigate = useNavigate();
+
 
   const images = useMemo(
     () => [
@@ -39,11 +41,10 @@ export default function Home() {
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Tarantula%20blanca%20y%20negra.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Rana%20dardo%20verde%20y%20negra.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Salamandra%tigre.png",
-
-      
     ],
     []
   );
+
 
   return (
     <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-slate-900">
@@ -58,6 +59,7 @@ export default function Home() {
           />
         </div>
 
+
         <h1 className="text-center text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold text-pretty text-white leading-tight animate-fade-in" style={{ animationDelay: '150ms' }}>
           Mejora la estética de tus terrarios con{" "}
           <span className="relative z-20 inline-block rounded-lg md:rounded-xl bg-emerald-500/40 px-2 py-0.5 md:px-4 md:py-1 text-white underline decoration-emerald-400 decoration-[3px] md:decoration-[6px] underline-offset-[8px] md:underline-offset-[16px] backdrop-blur-sm">
@@ -66,9 +68,11 @@ export default function Home() {
           elegantes y útiles.
         </h1>
 
+
         <p className="relative font-stretch-90% italic text-center text-sm sm:text-base md:text-lg text-neutral-200 max-w-4xl mx-auto px-2 animate-fade-in" style={{ animationDelay: '300ms' }}>
           Explora fichas con requisitos ambientales, distribución y conservación para etiquetar tu terrario.
         </p>
+
 
         <div className="relative flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2 animate-fade-in" style={{ animationDelay: '450ms' }}>
           <button
@@ -90,6 +94,7 @@ export default function Home() {
         </div>
       </div>
 
+
       {/* Overlay oscuro con degradado */}
       <div 
         className="absolute inset-0 z-10 h-full w-full pointer-events-none"
@@ -97,6 +102,15 @@ export default function Home() {
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.65) 100%)'
         }}
       />
+
+
+      {/* Version tag - bottom right corner */}
+      <div className="fixed bottom-4 right-4 z-30 pointer-events-none">
+        <span className="inline-block rounded-md bg-slate-800/80 px-3 py-1.5 text-xs font-mono text-neutral-300 backdrop-blur-sm border border-slate-700/50 shadow-lg">
+          v.01.00
+        </span>
+      </div>
+
 
       {/* Marquee 3D de fondo */}
       <ThreeDMarquee 

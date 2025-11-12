@@ -15,6 +15,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <Home /> },
+      { path: "/Home", element: <Home /> },
       { path: "/types", element: <Types /> },
       { path: "/species", element: <Species /> }, // usa ?type=slug
       { path: "/new", element: <NewAnimal /> },
