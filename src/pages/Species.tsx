@@ -152,7 +152,7 @@ export default function Species() {
           <button
             onClick={() => setIsModalOpen(true)}
             className="
-              px-5 py-2.5
+              px-2 py-2.5
               text-sm md:text-base font-medium 
               text-white 
               bg-gradient-to-r from-green-600 to-emerald-600 
@@ -162,7 +162,7 @@ export default function Species() {
               focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-900
             "
           >
-            Solicitar nueva especie
+            Solicitar especie
           </button>
         </header>
 
