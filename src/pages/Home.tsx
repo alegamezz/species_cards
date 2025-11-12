@@ -37,7 +37,7 @@ export default function Home() {
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Rana%20dardo%20fantasma.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Runner%20de%20seis%20lineas.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Runner%20verde.png",
-      "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Serpiente%20del%20maiz.png",
+      "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Rana%20dardo%20azul.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Tarantula%20blanca%20y%20negra.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Rana%20dardo%20verde%20y%20negra.png",
       "https://rtczyqvclglyscrqcjcp.supabase.co/storage/v1/object/public/species_cards/Salamandra%tigre.png",
