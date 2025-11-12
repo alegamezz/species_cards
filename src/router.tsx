@@ -5,6 +5,9 @@ import Types from "./pages/Types";
 import Species from "./pages/Species";
 import NewAnimal from "./pages/NewAnimal";
 import PruebaMapa from "./pages/PruebaMapa";
+import About from "./pages/About";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +19,9 @@ export const router = createBrowserRouter([
       { path: "/species", element: <Species /> }, // usa ?type=slug
       { path: "/new", element: <NewAnimal /> },
       { path: "/PruebaMapa", element: <PruebaMapa /> },
+      { path: "/about", element: <About /> },
+      { path: "/terms", element: <Terms /> },
+      { path: "/privacy", element: <Privacy /> },
     ],
   },
 ]);

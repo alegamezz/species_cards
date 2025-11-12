@@ -1,4 +1,3 @@
-// components/AnimalProCard.tsx
 import React from "react";
 import MapChart from "./MapChart";
 import ConservationBar from "./ConservationBar";
@@ -116,149 +115,175 @@ const AnimalProCard: React.FC<AnimalProCardProps> = ({
   breeding,
   env,
 }) => {
+  const [isTapped, setIsTapped] = React.useState(false);
+
   return (
-    <article
-      className="
-        relative w-[710px] h-[350px] rounded-2xl bg-slate-900/70 shadow-2xl overflow-hidden
-        cursor-pointer
-        motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out
-        motion-safe:hover:scale-[1.015]
-        hover:shadow-[0_24px_60px_rgba(0,0,0,0.45)]
-      "
-    >
-      {/* glow especular suave en hover */}
-      <div
-        className="
-          pointer-events-none absolute inset-0 opacity-0
-          motion-safe:transition-opacity motion-safe:duration-300
-          hover:opacity-100
-        "
-        style={{
-          background:
-            "radial-gradient(80% 60% at 30% 0%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%)",
-        }}
-      />
-
-      {/* overlay lateral sutil */}
-      <div
-        className="absolute inset-0 pointer-events-none z-10"
-        style={{
-          background:
-            "linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0) 70%)",
-        }}
-      />
-
-      {/* borde */}
-      <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-white/10 z-20" />
-
-      {/* blur global leve */}
-      <div className="backdrop-blur-md bg-white/5 absolute inset-0 opacity-[0.06] z-0" />
-
-      {/* Fondo: mapa */}
-      {countries.length > 0 && (
-        <div
-          className="absolute inset-0 z-0 opacity-30 pointer-events-none"
-          style={{
-            transform: "scale(1.35) translateY(-6%) translateX(6%)",
-            WebkitMaskImage:
-              "radial-gradient(72% 72% at 60% 45%, black 50%, transparent 100%)",
-            maskImage:
-              "radial-gradient(72% 72% at 60% 45%, black 50%, transparent 100%)",
-          }}
-        >
-          <MapChart highlightCountries={countries} variant="background" />
-        </div>
-      )}
-
-      {/* Imagen grande abajo-izquierda */}
-      <div
-        className="absolute bottom-0 left-0 z-60 pointer-events-none pb-2 pl-2"
-        style={{
-          overflow: "visible",
-          WebkitMaskImage:
-            "radial-gradient(85% 85% at 40% 75%, black 70%, transparent 100%)",
-          maskImage:
-            "radial-gradient(85% 85% at 40% 75%, black 70%, transparent 100%)",
-        }}
+    <div className="w-full flex justify-center items-center px-2">
+      {/* Contenedor responsive con diferentes tamaños según breakpoint */}
+      <div 
+        className="relative w-[355px] h-[175px] sm:w-[500px] sm:h-[246px] md:w-[710px] md:h-[350px]"
+        style={{ aspectRatio: '710 / 350' }}
       >
-        <img
-          src={image}
-          alt={`Imagen de ${name}`}
-          loading="lazy"
-          width={300}
-          height={225}
-          className="object-contain object-bottom-left md:w-[340px] md:h-[255px]"
-          style={{
-            filter:
-              "drop-shadow(0 12px 24px rgba(0,0,0,0.35)) drop-shadow(0 28px 56px rgba(0,0,0,0.25))",
-            WebkitFilter:
-              "drop-shadow(0 12px 24px rgba(0,0,0,0.35)) drop-shadow(0 28px 56px rgba(0,0,0,0.25))",
+        <article
+          className="
+            absolute top-0 left-0 origin-top-left
+            w-[710px] h-[350px] 
+            rounded-2xl bg-slate-900/70 shadow-2xl overflow-hidden
+            cursor-pointer
+            motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out
+            hover:shadow-[0_24px_60px_rgba(0,0,0,0.45)]
+            scale-50 sm:scale-[0.704] md:scale-100
+            active:scale-[0.49] sm:active:scale-[0.69] md:active:scale-[0.98]
+            active:shadow-[0_12px_30px_rgba(0,0,0,0.6)]
+            touch-manipulation
+          "
+          style={{ 
+            WebkitTapHighlightColor: 'transparent'
           }}
-        />
-      </div>
+          onTouchStart={() => setIsTapped(true)}
+          onTouchEnd={() => setTimeout(() => setIsTapped(false), 150)}
+        >
+          {/* Feedback visual táctil - reemplaza hover */}
+          <div
+            className={`
+              pointer-events-none absolute inset-0 
+              transition-opacity duration-200
+              ${isTapped ? 'opacity-100' : 'opacity-0'}
+            `}
+            style={{
+              background:
+                "radial-gradient(60% 50% at 50% 50%, rgba(34, 211, 238, 0.15) 0%, rgba(16, 185, 129, 0.08) 50%, transparent 100%)",
+            }}
+          />
 
-      {/* Cabecera: nombre a la izquierda, iconos a la derecha */}
-      <header className="absolute top-5 left-5 right-5 z-30">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h2 className="text-xl md:text-3xl font-semibold tracking-tight text-white truncate">
-              {name}
-            </h2>
-            <p className="text-md italic font-semibold text-slate-400 truncate">
-              {scientificName}
-            </p>
+          {/* Glow hover original (solo desktop) */}
+          <div
+            className="
+              pointer-events-none absolute inset-0 opacity-0
+              hidden md:block
+              motion-safe:transition-opacity motion-safe:duration-300
+              group-hover:opacity-100
+            "
+            style={{
+              background:
+                "radial-gradient(80% 60% at 30% 0%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%)",
+            }}
+          />
+
+          <div
+            className="absolute inset-0 pointer-events-none z-10"
+            style={{
+              background:
+                "linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0) 70%)",
+            }}
+          />
+
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-white/10 z-20" />
+
+          <div className="backdrop-blur-md bg-white/5 absolute inset-0 opacity-[0.06] z-0" />
+
+          {countries.length > 0 && (
+            <div
+              className="absolute inset-0 z-0 opacity-30 pointer-events-none"
+              style={{
+                transform: "scale(1.35) translateY(-6%) translateX(6%)",
+                WebkitMaskImage:
+                  "radial-gradient(72% 72% at 60% 45%, black 50%, transparent 100%)",
+                maskImage:
+                  "radial-gradient(72% 72% at 60% 45%, black 50%, transparent 100%)",
+              }}
+            >
+              <MapChart highlightCountries={countries} variant="background" />
+            </div>
+          )}
+
+          <div
+            className="absolute bottom-0 left-0 z-60 pointer-events-none pb-2 pl-2"
+            style={{
+              overflow: "visible",
+              WebkitMaskImage:
+                "radial-gradient(85% 85% at 40% 75%, black 70%, transparent 100%)",
+              maskImage:
+                "radial-gradient(85% 85% at 40% 75%, black 70%, transparent 100%)",
+            }}
+          >
+            <img
+              src={image}
+              alt={`Imagen de ${name}`}
+              loading="lazy"
+              width={340}
+              height={255}
+              className="object-contain object-bottom-left w-[340px] h-[255px]"
+              style={{
+                filter:
+                  "drop-shadow(0 12px 24px rgba(0,0,0,0.35)) drop-shadow(0 28px 56px rgba(0,0,0,0.25))",
+                WebkitFilter:
+                  "drop-shadow(0 12px 24px rgba(0,0,0,0.35)) drop-shadow(0 28px 56px rgba(0,0,0,0.25))",
+              }}
+            />
           </div>
 
-          <div className="flex flex-row items-center gap-5 shrink-0">
-            <IconWrap label={fmtTemp(env)}>
-              <WiThermometer className="w-7 h-7" />
-            </IconWrap>
-            <IconWrap label={fmtHum(env)}>
-              <WiHumidity className="w-7 h-7" />
-            </IconWrap>
-            <IconWrap label={fmtLife(env)}>
-              <GiSandsOfTime className="w-7 h-7" />
-            </IconWrap>
-            <IconWrap label={env?.activity ?? "-"}>
-              <ActivityIcon activity={env?.activity ?? null} />
-            </IconWrap>
-            <IconWrap label={fmtLen(env)}>
-              <TbRulerMeasure className="w-7 h-7" />
-            </IconWrap>
-          </div>
-        </div>
-      </header>
-
-      {/* Cuerpo en dos columnas */}
-      <div className="relative z-30 h-full pt-[88px] px-0">
-        <div className="grid grid-cols-2 h-full gap-5">
-          <div />
-          <div className="flex flex-col">
-            <section className="grid grid-cols-1 gap-3 pr-5 sm:pr-8">
-              <p className={valueCls}>
-                <span className={titleCls}>HÁBITAT:</span> {habitat}
-              </p>
-              <p className={valueCls}>
-                <span className={titleCls}>DIETA:</span> {diet}
-              </p>
-              {breeding && (
-                <p className={valueCls}>
-                  <span className={titleCls}>REPRODUCCIÓN:</span> {breeding}
+          <header className="absolute top-5 left-5 right-5 z-30">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <h2 className="text-3xl font-semibold tracking-tight text-white truncate">
+                  {name}
+                </h2>
+                <p className="text-md italic font-semibold text-slate-400 truncate">
+                  {scientificName}
                 </p>
-              )}
-            </section>
-            <div className="flex-1" />
-          </div>
-        </div>
-      </div>
+              </div>
 
-      {/* Barra de conservación fija abajo-derecha */}
-      <div className="absolute bottom-4 right-4 z-40">
-        <div className="w-[260px] sm:w-[320px]">
-          <ConservationBar status={status} showLabel />
-        </div>
+              <div className="flex flex-row items-center gap-5 shrink-0">
+                <IconWrap label={fmtTemp(env)}>
+                  <WiThermometer className="w-7 h-7" />
+                </IconWrap>
+                <IconWrap label={fmtHum(env)}>
+                  <WiHumidity className="w-7 h-7" />
+                </IconWrap>
+                <IconWrap label={fmtLife(env)}>
+                  <GiSandsOfTime className="w-7 h-7" />
+                </IconWrap>
+                <IconWrap label={env?.activity ?? "-"}>
+                  <ActivityIcon activity={env?.activity ?? null} />
+                </IconWrap>
+                <IconWrap label={fmtLen(env)}>
+                  <TbRulerMeasure className="w-7 h-7" />
+                </IconWrap>
+              </div>
+            </div>
+          </header>
+
+          <div className="relative z-30 h-full pt-[88px] px-0">
+            <div className="grid grid-cols-2 h-full gap-5">
+              <div />
+              <div className="flex flex-col">
+                <section className="grid grid-cols-1 gap-3 pr-8">
+                  <p className={valueCls}>
+                    <span className={titleCls}>HÁBITAT:</span> {habitat}
+                  </p>
+                  <p className={valueCls}>
+                    <span className={titleCls}>DIETA:</span> {diet}
+                  </p>
+                  {breeding && (
+                    <p className={valueCls}>
+                      <span className={titleCls}>REPRODUCCIÓN:</span> {breeding}
+                    </p>
+                  )}
+                </section>
+                <div className="flex-1" />
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-4 right-4 z-40">
+            <div className="w-[320px]">
+              <ConservationBar status={status} showLabel />
+            </div>
+          </div>
+        </article>
       </div>
-    </article>
+    </div>
   );
 };
 

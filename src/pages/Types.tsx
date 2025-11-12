@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getTypes, type SpeciesType } from "../lib/types.service";
 import TypesFocus from "../components/TypesFocus";
+import logo from "../assets/logo-terrarium-no-text-lime-green.png"; // ajusta la ruta si es diferente
 
 export default function Types() {
   const [types, setTypes] = useState<SpeciesType[]>([]);
@@ -51,7 +52,29 @@ export default function Types() {
   }
 
   return (
-    <div className="min-h-screen text-white p-6">
+    <div className="min-h-screen text-white p-6 bg-gray-950">
+      {/* 🌿 Header superior con logo y título */}
+      <header className="flex items-center gap-4 mb-10 animate-fade-in">
+        <img
+          src={logo}
+          alt="Terrarium Logo"
+          className="h-12 w-auto object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]"
+        />
+        <h2
+          className="
+            text-3xl md:text-4xl font-semibold 
+            text-white
+            font-extrabold
+            bg-clip-text text-transparent
+            drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]
+            tracking-tight
+          "
+        >
+          Categorías
+        </h2>
+      </header>
+
+      {/* 🌱 Contenido principal */}
       <div className="min-h-[20vh] flex items-center justify-center">
         <h1
           className="
@@ -59,7 +82,6 @@ export default function Types() {
             text-5xl md:text-6xl font-bold 
             tracking-tight
             text-white
-            bg-clip-text  
             drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]
             leading-tight
           "

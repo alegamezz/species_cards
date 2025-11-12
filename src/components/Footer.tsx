@@ -17,6 +17,8 @@ export default function Footer() {
         <div className="flex flex-col gap-3 items-center justify-between md:flex-row">
           {/* enlaces compactos */}
           <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+          <Link to="/Home" className="hover:text-white/90">Menú</Link>
+          <span className="opacity-30">•</span>
             <Link to="/types" className="hover:text-white/90">Tipos</Link>
             <span className="opacity-30">•</span>
             <Link to="/species" className="hover:text-white/90">Especies</Link>
@@ -30,10 +32,8 @@ export default function Footer() {
 
           {/* copyright + créditos compactos */}
           <div className="text-xs md:text-sm text-neutral-400">
-            © {new Date().getFullYear()} Terrarium Cards · 
-            <a href="/credits" className="ml-2 underline decoration-white/20 underline-offset-4 hover:text-white">
-              Créditos imágenes
-            </a>
+            © {new Date().getFullYear()} Terrarium Cards 
+            
           </div>
         </div>
       </div>
